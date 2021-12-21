@@ -20,6 +20,6 @@ class SortingArray(val vals: DoubleArray) {
         val temp = vals[index1]
         vals[index1] = vals[index2]
         vals[index2] = temp
-        renderer.switchRects(index1, index2, vals[index1])
+        renderer.switchRects(index1, index2, (vals[index1] + vals[index2]) / 2)
     }
 }
