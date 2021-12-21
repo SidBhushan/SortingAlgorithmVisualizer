@@ -17,7 +17,8 @@ const val MAX_ITEM: Int = 50
 fun main() {
     val array = DoubleArray(30)
     for (index in array.indices) {
-        array[index] = Random.nextDouble(1.0, MAX_ITEM.toDouble())
+        array[index] = (1..MAX_ITEM).random().toDouble()
+//        array[index] = Random.nextDouble(1.0, MAX_ITEM.toDouble())
     }
     val sortingArray = SortingArray(array)
 
@@ -51,6 +52,7 @@ fun main() {
                             "quickSort" -> quicksort(sortingArray)
                             else -> return@onclick
                         }
+                        println(sortingArray.vals)
                         button?.classList?.add("disabled")
                     }
                 }
