@@ -1,17 +1,14 @@
 import array.SortingArray
-import array.bubbleSort
-import array.quicksort
+import array.algorithms.*
 import graphics.Renderer
+import graphics.sortingOption
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.classes
 import kotlinx.html.dom.append
 import kotlinx.html.id
 import kotlinx.html.js.button
 import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.option
 import kotlinx.html.js.select
-import kotlinx.html.onClick
 import org.w3c.dom.HTMLSelectElement
 import kotlin.random.Random
 
@@ -30,14 +27,11 @@ fun main() {
             controls.append {
                 select {
                     id = "sorting-select"
-                    option {
-                        +"Bubble Sort"
-                        value = "bubbleSort"
-                    }
-                    option {
-                        +"Quicksort"
-                        value = "quickSort"
-                    }
+                    sortingOption("Bubble Sort", "bubbleSort")
+                    sortingOption("Cocktail Shaker Sort", "cocktailShakerSort")
+                    sortingOption("Insertion Sort", "insertionSort")
+                    sortingOption("Selection Sort", "selectionSort")
+                    sortingOption("Quicksort", "quickSort")
                 }
             }
             controls.append {
@@ -51,6 +45,9 @@ fun main() {
                         }
                         when ((document.getElementById("sorting-select") as? HTMLSelectElement)?.value) {
                             "bubbleSort" -> bubbleSort(sortingArray)
+                            "cocktailShakerSort" -> cocktailShakerSort(sortingArray)
+                            "insertionSort" -> insertionSort(sortingArray)
+                            "selectionSort" -> selectionSort(sortingArray)
                             "quickSort" -> quicksort(sortingArray)
                             else -> return@onclick
                         }

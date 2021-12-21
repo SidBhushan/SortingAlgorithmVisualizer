@@ -1,4 +1,6 @@
-package array
+package array.algorithms
+
+import array.SortingArray
 
 fun quicksort(array: SortingArray) {
     fun partition(array: SortingArray, low: Int, high: Int): Int {

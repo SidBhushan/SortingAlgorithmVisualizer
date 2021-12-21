@@ -1,4 +1,6 @@
-package array
+package array.algorithms
+
+import array.SortingArray
 
 fun bubbleSort(array: SortingArray) {
     for (i in array.size - 1 downTo 1) {
