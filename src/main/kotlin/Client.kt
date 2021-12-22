@@ -15,7 +15,7 @@ import kotlin.random.Random
 const val MAX_ITEM: Int = 50
 
 fun main() {
-    val array = DoubleArray(30)
+    val array = DoubleArray(50)
     for (index in array.indices) {
         array[index] = Random.nextDouble(1.0, MAX_ITEM.toDouble())
     }
@@ -31,6 +31,7 @@ fun main() {
                     sortingOption("Cocktail Shaker Sort", "cocktailShakerSort")
                     sortingOption("Insertion Sort", "insertionSort")
                     sortingOption("Selection Sort", "selectionSort")
+                    sortingOption("Shell Sort", "shellSort")
                     sortingOption("Quicksort", "quickSort")
                 }
             }
@@ -48,7 +49,8 @@ fun main() {
                             "cocktailShakerSort" -> cocktailShakerSort(sortingArray)
                             "insertionSort" -> insertionSort(sortingArray)
                             "selectionSort" -> selectionSort(sortingArray)
-                            "quickSort" -> quicksort(sortingArray)
+                            "shellSort" -> shellSort(sortingArray)
+                            "quickSort" -> quickSort(sortingArray)
                             else -> return@onclick
                         }
                         button?.classList?.add("disabled")

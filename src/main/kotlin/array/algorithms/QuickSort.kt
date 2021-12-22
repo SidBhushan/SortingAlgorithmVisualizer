@@ -2,7 +2,7 @@ package array.algorithms
 
 import array.SortingArray
 
-fun quicksort(array: SortingArray) {
+fun quickSort(array: SortingArray) {
     fun partition(array: SortingArray, low: Int, high: Int): Int {
         val pivot = array[high]
         var i = low - 1
