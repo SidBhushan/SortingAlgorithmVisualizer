@@ -1,5 +1,8 @@
 package graphics
 
+import kotlin.math.exp
+import kotlin.math.ln
+
 const val saturation = "100%"
 const val lightness = "50%"
 
@@ -27,5 +30,6 @@ class RectScale(
 }
 
 class FreqScale(private val low: Double, private val high: Double, private val max: Double) {
-    operator fun invoke(value: Double): Double = (value / max) * (high - low) + low
+    private val scaleFactor = (ln(high) - ln(low)) / max
+    operator fun invoke(value: Double): Double = low * exp(scaleFactor * value)
 }

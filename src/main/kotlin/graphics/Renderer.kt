@@ -16,8 +16,8 @@ const val RECT_MOVE_SPEED: Double = 1.0
 const val FAST_SPEED: Double = 5.0
 const val HEIGHT: Double = 1000.0
 const val WIDTH: Double = 1000.0
-const val LOW_PITCH: Double = 130.81
-const val HIGH_PITCH: Double = 523.25
+const val LOW_PITCH: Double = 65.41
+const val HIGH_PITCH: Double = 1046.50
 
 class Renderer(val array: SortingArray, val root: Node) : CoroutineScope {
     val colorScale = ColorScale(array.min, array.max)
