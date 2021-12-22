@@ -22,39 +22,50 @@ fun main() {
     val sortingArray = SortingArray(array)
 
     window.onload = {
-        val controls = document.getElementById("controls")
-        if (controls != null) {
-            controls.append {
-                select {
-                    id = "sorting-select"
-                    sortingOption("Bubble Sort", "bubbleSort")
-                    sortingOption("Cocktail Shaker Sort", "cocktailShakerSort")
-                    sortingOption("Insertion Sort", "insertionSort")
-                    sortingOption("Selection Sort", "selectionSort")
-                    sortingOption("Shell Sort", "shellSort")
-                    sortingOption("Quicksort", "quickSort")
+        document.getElementById("controls")?.append {
+            select {
+                id = "sorting-select"
+                sortingOption("Bubble Sort", "bubbleSort")
+                sortingOption("Cocktail Shaker Sort", "cocktailShakerSort")
+                sortingOption("Insertion Sort", "insertionSort")
+                sortingOption("Selection Sort", "selectionSort")
+                sortingOption("Shell Sort", "shellSort")
+                sortingOption("Quicksort", "quickSort")
+            }
+            button {
+                id = "start-button"
+                +"Start"
+                onClickFunction = onclick@{
+                    val startButton = document.getElementById("start-button")
+                    val reverseButton = document.getElementById("reverse-button")
+                    if (startButton?.classList?.contains("disabled") == true) {
+                        return@onclick
+                    }
+                    when ((document.getElementById("sorting-select") as? HTMLSelectElement)?.value) {
+                        "bubbleSort" -> bubbleSort(sortingArray)
+                        "cocktailShakerSort" -> cocktailShakerSort(sortingArray)
+                        "insertionSort" -> insertionSort(sortingArray)
+                        "selectionSort" -> selectionSort(sortingArray)
+                        "shellSort" -> shellSort(sortingArray)
+                        "quickSort" -> quickSort(sortingArray)
+                        else -> return@onclick
+                    }
+                    startButton?.classList?.add("disabled")
+                    reverseButton?.classList?.remove("disabled")
                 }
             }
-            controls.append {
-                button {
-                    id = "start-button"
-                    +"Start"
-                    onClickFunction = onclick@{
-                        val button = document.getElementById("start-button")
-                        if (button?.classList?.contains("disabled") == true) {
-                            return@onclick
-                        }
-                        when ((document.getElementById("sorting-select") as? HTMLSelectElement)?.value) {
-                            "bubbleSort" -> bubbleSort(sortingArray)
-                            "cocktailShakerSort" -> cocktailShakerSort(sortingArray)
-                            "insertionSort" -> insertionSort(sortingArray)
-                            "selectionSort" -> selectionSort(sortingArray)
-                            "shellSort" -> shellSort(sortingArray)
-                            "quickSort" -> quickSort(sortingArray)
-                            else -> return@onclick
-                        }
-                        button?.classList?.add("disabled")
+            button (classes = "disabled") {
+                id = "reverse-button"
+                +"\u21ba"
+                onClickFunction = onclick@ {
+                    val startButton = document.getElementById("start-button")
+                    val reverseButton = document.getElementById("reverse-button")
+                    if (reverseButton?.classList?.contains("disabled") == true) {
+                        return@onclick
                     }
+                    sortingArray.reverse()
+                    startButton?.classList?.remove("disabled")
+                    reverseButton?.classList?.add("disabled")
                 }
             }
         }

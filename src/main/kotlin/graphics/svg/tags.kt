@@ -5,7 +5,7 @@ import kotlinx.html.*
 @Suppress("unused")
 open class RECT(initialAttributes: Map<String, String>, override val consumer: TagConsumer<*>) :
     HTMLTag("rect", consumer, initialAttributes, "http://www.w3.org/2000/svg", false, false),
-    HtmlBlockInlineTag {}
+    HtmlBlockInlineTag
 
 @HtmlTagMarker
 inline fun <T, C : TagConsumer<T>> C.rect(

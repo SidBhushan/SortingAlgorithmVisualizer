@@ -13,6 +13,7 @@ class SortingArray(val vals: DoubleArray) {
         get() = vals.size
 
     lateinit var renderer: Renderer
+    private val swaps: ArrayDeque<Pair<Int, Int>> = ArrayDeque()
 
     operator fun get(index: Int) = vals[index]
 
@@ -21,5 +22,16 @@ class SortingArray(val vals: DoubleArray) {
         vals[index1] = vals[index2]
         vals[index2] = temp
         renderer.switchRects(index1, index2, (vals[index1] + vals[index2]) / 2)
+        swaps.addFirst(Pair(index1, index2))
+    }
+
+    fun reverse() {
+        while (swaps.isNotEmpty()) {
+            val (index1, index2) = swaps.removeFirst()
+            val temp = vals[index1]
+            vals[index1] = vals[index2]
+            vals[index2] = temp
+            renderer.switchRects(index1, index2, (vals[index1] + vals[index2]) / 2, true)
+        }
     }
 }

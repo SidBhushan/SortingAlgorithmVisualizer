@@ -13,11 +13,11 @@ import org.w3c.dom.Node
 import kotlin.coroutines.CoroutineContext
 
 const val RECT_MOVE_SPEED: Double = 1.0
+const val FAST_SPEED: Double = 5.0
 const val HEIGHT: Double = 1000.0
 const val WIDTH: Double = 1000.0
 const val LOW_PITCH: Double = 130.81
 const val HIGH_PITCH: Double = 523.25
-const val SOUND_DURATION: Long = 250
 
 class Renderer(val array: SortingArray, val root: Node) : CoroutineScope {
     val colorScale = ColorScale(array.min, array.max)
@@ -60,8 +60,6 @@ class Renderer(val array: SortingArray, val root: Node) : CoroutineScope {
 
             val soundJob = launch {
                 sound.play()
-//                delay(SOUND_DURATION)
-//                sound.stop()
             }
 
             val block1 = animation1.block
@@ -91,14 +89,14 @@ class Renderer(val array: SortingArray, val root: Node) : CoroutineScope {
         }
     }
 
-    private fun animate(rect: HTMLElement, block: suspend CoroutineScope.(HTMLElement) -> Unit): Animation =
-        Animation(rect, block)
+    private fun animate(elem: HTMLElement, block: suspend CoroutineScope.(HTMLElement) -> Unit): Animation =
+        Animation(elem, block)
 
-    private fun moveRect(rect: HTMLElement, currentHeight: Double, targetHeight: Double): Animation =
+    private fun moveRect(rect: HTMLElement, currentHeight: Double, targetHeight: Double, fast: Boolean): Animation =
         animate(rect) {
             val timer = AnimationTimer()
             var y = currentHeight
-            val speed = if (targetHeight - y > 0) RECT_MOVE_SPEED else -RECT_MOVE_SPEED
+            val speed = (if (targetHeight - y > 0) RECT_MOVE_SPEED else -RECT_MOVE_SPEED) * (if (fast) FAST_SPEED else 1.0)
             while (true) {
                 val dt = timer.await() * speed
                 y += dt
@@ -110,15 +108,15 @@ class Renderer(val array: SortingArray, val root: Node) : CoroutineScope {
             }
         }
 
-    fun switchRects(index1: Int, index2: Int, soundValue: Double) {
+    fun switchRects(index1: Int, index2: Int, soundValue: Double, fast: Boolean = false) {
         val rect1 = rects[index1]
         val rect2 = rects[index2]
         rects[index1] = rect2
         rects[index2] = rect1
         val rect1Height = yScale(index1).toDouble()
         val rect2Height = yScale(index2).toDouble()
-        val animation1 = moveRect(rect1, rect1Height, rect2Height)
-        val animation2 = moveRect(rect2, rect2Height, rect1Height)
+        val animation1 = moveRect(rect1, rect1Height, rect2Height, fast)
+        val animation2 = moveRect(rect2, rect2Height, rect1Height, fast)
         val sound = createSound(soundValue)
         launchAnimationPair(animation1, animation2, sound)
     }
