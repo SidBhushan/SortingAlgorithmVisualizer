@@ -21,7 +21,7 @@ class SortingArray(val vals: DoubleArray) {
         val temp = vals[index1]
         vals[index1] = vals[index2]
         vals[index2] = temp
-        renderer.switchRects(index1, index2, (vals[index1] + vals[index2]) / 2)
+        renderer.switchRects(index1, index2, 2 / (1 / vals[index1] + 1 / vals[index2]))
         swaps.addFirst(Pair(index1, index2))
     }
 
@@ -31,7 +31,7 @@ class SortingArray(val vals: DoubleArray) {
             val temp = vals[index1]
             vals[index1] = vals[index2]
             vals[index2] = temp
-            renderer.switchRects(index1, index2, (vals[index1] + vals[index2]) / 2, true)
+            renderer.switchRects(index1, index2, 2 / (1 / vals[index1] + 1 / vals[index2]), true)
         }
     }
 }
