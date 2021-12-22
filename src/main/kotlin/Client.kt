@@ -14,6 +14,17 @@ import kotlin.random.Random
 
 const val MAX_ITEM: Int = 50
 
+val sorts = mapOf(
+    "bubbleSort" to Sort("Bubble Sort", ::bubbleSort),
+    "cocktailShakerSort" to Sort("Cocktail Shaker Sort", ::cocktailShakerSort),
+    "exchangeSort" to Sort("Exchange Sort", ::exchangeSort),
+    "insertionSort" to Sort("Insertion Sort", ::insertionSort),
+    "selectionSort" to Sort("Selection Sort", ::selectionSort),
+    "combSort" to Sort("Comb Sort", ::combSort),
+    "shellSort" to Sort("Shell Sort", ::shellSort),
+    "quickSort" to Sort("Quicksort", ::quickSort)
+)
+
 fun main() {
     val array = DoubleArray(50)
     for (index in array.indices) {
@@ -25,12 +36,9 @@ fun main() {
         document.getElementById("controls")?.append {
             select {
                 id = "sorting-select"
-                sortingOption("Bubble Sort", "bubbleSort")
-                sortingOption("Cocktail Shaker Sort", "cocktailShakerSort")
-                sortingOption("Insertion Sort", "insertionSort")
-                sortingOption("Selection Sort", "selectionSort")
-                sortingOption("Shell Sort", "shellSort")
-                sortingOption("Quicksort", "quickSort")
+                for ((identifier, sort) in sorts) {
+                    sortingOption(sort.name, identifier)
+                }
             }
             button {
                 id = "start-button"
@@ -41,23 +49,17 @@ fun main() {
                     if (startButton?.classList?.contains("disabled") == true) {
                         return@onclick
                     }
-                    when ((document.getElementById("sorting-select") as? HTMLSelectElement)?.value) {
-                        "bubbleSort" -> bubbleSort(sortingArray)
-                        "cocktailShakerSort" -> cocktailShakerSort(sortingArray)
-                        "insertionSort" -> insertionSort(sortingArray)
-                        "selectionSort" -> selectionSort(sortingArray)
-                        "shellSort" -> shellSort(sortingArray)
-                        "quickSort" -> quickSort(sortingArray)
-                        else -> return@onclick
-                    }
+                    val sort = sorts[(document.getElementById("sorting-select") as? HTMLSelectElement)?.value]?.func
+                        ?: return@onclick
+                    sort(sortingArray)
                     startButton?.classList?.add("disabled")
                     reverseButton?.classList?.remove("disabled")
                 }
             }
-            button (classes = "disabled") {
+            button(classes = "disabled") {
                 id = "reverse-button"
                 +"\u21ba"
-                onClickFunction = onclick@ {
+                onClickFunction = onclick@{
                     val startButton = document.getElementById("start-button")
                     val reverseButton = document.getElementById("reverse-button")
                     if (reverseButton?.classList?.contains("disabled") == true) {
