@@ -17,12 +17,15 @@ const val MAX_ITEM: Int = 50
 val sorts = mapOf(
     "bubbleSort" to Sort("Bubble Sort", ::bubbleSort),
     "cocktailShakerSort" to Sort("Cocktail Shaker Sort", ::cocktailShakerSort),
+    "oddEvenSort" to Sort("Odd-Even Sort", ::oddEvenSort),
     "exchangeSort" to Sort("Exchange Sort", ::exchangeSort),
     "insertionSort" to Sort("Insertion Sort", ::insertionSort),
     "selectionSort" to Sort("Selection Sort", ::selectionSort),
     "combSort" to Sort("Comb Sort", ::combSort),
     "shellSort" to Sort("Shell Sort", ::shellSort),
-    "quickSort" to Sort("Quicksort", ::quickSort)
+    "inPlaceMergeSort" to Sort("In Place Merge Sort", ::inPlaceMergeSort),
+    "quickSort" to Sort("Quicksort", ::quickSort),
+    "heapSort" to Sort("Heapsort", ::heapSort)
 )
 
 fun main() {
