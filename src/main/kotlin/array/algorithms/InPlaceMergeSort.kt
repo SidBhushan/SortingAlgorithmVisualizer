@@ -6,7 +6,6 @@ import kotlin.math.ceil
 fun inPlaceMergeSort(array: SortingArray) {
     fun merge(array: SortingArray, start: Int, end: Int) {
         for (gap in InPlaceMergeSortGap(end - start + 1)) {
-            println(gap)
             for (i in start..end - gap) {
                 if (array[i] > array[i + gap]) {
                     array.switch(i, i + gap)
