@@ -5,8 +5,8 @@ import array.SortingArray
 fun shellSort(array: SortingArray) {
     for (gap in ShellSortGap(array.size)) {
         for (offset in 0 until gap) {
-            for (i in offset until array.size step gap) {
-                for (j in i + 1 downTo offset step gap) {
+            for (i in offset until array.size - 1 step gap) {
+                for (j in i + 1 downTo offset + gap step gap) {
                     if (array[j] < array[j - gap]) {
                         array.switch(j, j - gap)
                     }

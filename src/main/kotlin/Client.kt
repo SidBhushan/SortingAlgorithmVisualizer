@@ -10,7 +10,9 @@ import kotlinx.html.js.button
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.select
 import org.w3c.dom.HTMLSelectElement
+import org.w3c.dom.url.URLSearchParams
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 const val MAX_ITEM: Int = 50
 
@@ -29,9 +31,29 @@ val sorts = mapOf(
 )
 
 fun main() {
-    val array = DoubleArray(50)
-    for (index in array.indices) {
-        array[index] = Random.nextDouble(1.0, MAX_ITEM.toDouble())
+    val params = URLSearchParams(window.location.search)
+    val text = params.get("text")
+
+    val array = Array(text?.length ?: 50) { Pair(0.0, ' ') }
+    val range = MAX_ITEM.toDouble() / array.size
+    if (text == null) {
+        for (index in array.indices) {
+            array[index] = Pair(Random.nextDouble(1.0, MAX_ITEM.toDouble()), ' ')
+        }
+    } else {
+        var lastValue = 1.0
+        for (index in array.indices) {
+            val nextValue = Random.nextDouble(lastValue, lastValue + range)
+            array[index] = Pair(nextValue, text[index])
+            lastValue = nextValue
+        }
+        repeat(text.length * 10) {
+            val randIndex1 = Random.nextInt(array.indices)
+            val randIndex2 = Random.nextInt(array.indices)
+            val temp = array[randIndex1]
+            array[randIndex1] = array[randIndex2]
+            array[randIndex2] = temp
+        }
     }
     val sortingArray = SortingArray(array)
 
@@ -77,7 +99,7 @@ fun main() {
 
         val root = document.getElementById("root")
         if (root != null) {
-            val renderer = Renderer(sortingArray, root)
+            val renderer = Renderer(sortingArray, root, text)
             renderer.start()
         }
     }

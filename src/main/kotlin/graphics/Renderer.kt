@@ -2,14 +2,17 @@ package graphics
 
 import MAX_ITEM
 import array.SortingArray
+import graphics.svg.g
 import graphics.Pizzicato.Companion.Sound as Sound
 import graphics.svg.rect
+import graphics.svg.text
 import kotlinx.browser.window
 import kotlinx.coroutines.*
 import kotlinx.html.svg
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
+import org.w3c.dom.get
 import kotlin.coroutines.CoroutineContext
 
 const val RECT_MOVE_SPEED: Double = 1.0
@@ -19,7 +22,7 @@ const val WIDTH: Double = 1000.0
 const val LOW_PITCH: Double = 65.41
 const val HIGH_PITCH: Double = 1046.50
 
-class Renderer(val array: SortingArray, val root: Node) : CoroutineScope {
+class Renderer(val array: SortingArray, val root: Node, val displayText: String? = null) : CoroutineScope {
     val colorScale = ColorScale(array.min, array.max)
     val yScale = YScale(HEIGHT, array.size)
     val rectScale = RectScale(WIDTH, HEIGHT, array.size, MAX_ITEM.toDouble())
@@ -42,12 +45,31 @@ class Renderer(val array: SortingArray, val root: Node) : CoroutineScope {
         root.append {
             svg(classes = "array") {
                 attributes["viewBox"] = "0 0 $WIDTH $HEIGHT"
-                for ((index, value) in array.vals.withIndex()) {
-                    val nextRect = rect("0", yScale(index), rectScale.width(value), rectScale.height) {
-                        attributes["stroke"] = colorScale(value)
-                        attributes["fill"] = colorScale(value)
+                for ((index, pair) in array.vals.withIndex()) {
+                    val value = pair.first
+                    val char = pair.second.toString()
+                    if (displayText == null) {
+                        val nextRect = rect("0", yScale(index), rectScale.width(value), rectScale.height) {
+                            attributes["stroke"] = colorScale(value)
+                            attributes["fill"] = colorScale(value)
+                        }
+                        rects.add(nextRect)
+                    } else {
+                        val nextRect = g {
+                            text("0", yScale(index)) {
+                                attributes["font-size"] = (rectScale.height.toDouble() / 1.08216).toString()
+                                attributes["font-family"] = "Roboto Mono, monospace"
+                                attributes["font-weight"] = "800"
+                                attributes["dominant-baseline"] = "hanging"
+                                +char
+                            }
+                            rect(rectScale.height, yScale(index), rectScale.width(value), rectScale.height) {
+                                attributes["stroke"] = colorScale(value)
+                                attributes["fill"] = colorScale(value)
+                            }
+                        }
+                        rects.add(nextRect)
                     }
-                    rects.add(nextRect)
                 }
             }
         }
@@ -96,17 +118,28 @@ class Renderer(val array: SortingArray, val root: Node) : CoroutineScope {
         animate(rect) {
             val timer = AnimationTimer()
             var y = currentHeight
-            val speed = (if (targetHeight - y > 0) RECT_MOVE_SPEED else -RECT_MOVE_SPEED) * (if (fast) FAST_SPEED else 1.0)
+            val speed =
+                (if (targetHeight - y > 0) RECT_MOVE_SPEED else -RECT_MOVE_SPEED) * (if (fast) FAST_SPEED else 1.0)
             while (true) {
                 val dt = timer.await() * speed
                 y += dt
-                rect.setAttribute("y", y.toString())
+                adjustAttribute(rect, "y", y.toString())
                 if ((speed > 0 && y >= targetHeight) || (speed < 0 && y <= targetHeight)) {
-                    rect.setAttribute("y", targetHeight.toString())
+                    adjustAttribute(rect, "y", targetHeight.toString())
                     break
                 }
             }
         }
+
+    private fun adjustAttribute(elem: HTMLElement, name: String, value: String) {
+        if (elem.tagName == "g") {
+            for (i in 0 until elem.childElementCount) {
+                elem.children[i]?.setAttribute(name, value)
+            }
+        } else {
+            elem.setAttribute(name, value)
+        }
+    }
 
     fun switchRects(index1: Int, index2: Int, soundValue: Double, fast: Boolean = false) {
         val rect1 = rects[index1]

@@ -5,7 +5,7 @@ import array.SortingArray
 fun cocktailShakerSort(array: SortingArray) {
     var end = array.size
     for (i in 0 until array.size / 2) {
-        for (j in i until end) {
+        for (j in i until end - 1) {
             if (array[j] > array[j + 1]) {
                 array.switch(j, j + 1)
             }
