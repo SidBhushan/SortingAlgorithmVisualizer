@@ -58,7 +58,6 @@ class Renderer(val array: SortingArray, val root: Node, val displayText: String?
                         val nextRect = g {
                             text("0", yScale(index)) {
                                 attributes["font-size"] = (rectScale.height.toDouble() / 1.08216).toString()
-                                attributes["font-family"] = "Roboto Mono, monospace"
                                 attributes["font-weight"] = "800"
                                 attributes["dominant-baseline"] = "hanging"
                                 +char
